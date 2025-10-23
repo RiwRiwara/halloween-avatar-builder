@@ -1,11 +1,21 @@
-export type AvatarOptions = {
-  skinTone: string;
-  head: string;
-  eyes: string;
-  body: string;
-};
+export interface PlacedAsset {
+  id: string;
+  assetId: string;
+  category: string;
+  position: { x: number; y: number };
+  scale: number;
+  zIndex: number;
+}
 
-export type CustomizationCategory = {
+export interface AvatarState {
+  placedAssets: PlacedAsset[];
+}
+
+export interface CustomizationCategory {
   name: string;
-  options: { id: string; label: string; icon: string }[];
-};
+  options: {
+    id: string;
+    label: string;
+    icon: string;
+  }[];
+}

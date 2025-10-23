@@ -1,15 +1,15 @@
 import { useRef, useState } from 'react';
 import { Download, Share2, ArrowLeft, Check } from 'lucide-react';
 import html2canvas from 'html2canvas';
-import type { AvatarOptions } from '../types';
-import { Avatar } from './Avatar';
+import type { PlacedAsset } from '../types';
+import { AvatarDisplay } from './AvatarDisplay';
 
 interface SaveSharePageProps {
-  avatarOptions: AvatarOptions;
+  placedAssets: PlacedAsset[];
   onBack: () => void;
 }
 
-export const SaveSharePage = ({ avatarOptions, onBack }: SaveSharePageProps) => {
+export const SaveSharePage = ({ placedAssets, onBack }: SaveSharePageProps) => {
   const avatarRef = useRef<HTMLDivElement>(null);
   const [saving, setSaving] = useState(false);
   const [shared, setShared] = useState(false);
@@ -20,7 +20,7 @@ export const SaveSharePage = ({ avatarOptions, onBack }: SaveSharePageProps) => 
     setSaving(true);
     try {
       const canvas = await html2canvas(avatarRef.current, {
-        backgroundColor: null,
+        backgroundColor: '#000000',
         scale: 2,
       });
 
@@ -40,7 +40,7 @@ export const SaveSharePage = ({ avatarOptions, onBack }: SaveSharePageProps) => 
 
     try {
       const canvas = await html2canvas(avatarRef.current, {
-        backgroundColor: null,
+        backgroundColor: '#000000',
         scale: 2,
       });
 
@@ -53,7 +53,7 @@ export const SaveSharePage = ({ avatarOptions, onBack }: SaveSharePageProps) => 
           await navigator.share({
             files: [file],
             title: 'My Halloween Avatar',
-            text: 'Check out my spooky avatar! 🎃',
+            text: 'Check out my Halloween avatar!',
           });
           setShared(true);
           setTimeout(() => setShared(false), 2000);
@@ -71,26 +71,25 @@ export const SaveSharePage = ({ avatarOptions, onBack }: SaveSharePageProps) => 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-900 via-orange-900 to-black flex flex-col">
-      <header className="p-4">
+    <div className="min-h-screen bg-black flex flex-col">
+      {/* Header */}
+      <header className="bg-linear-to-r from-primary to-orange-600 p-4 shadow-lg flex items-center">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-orange-400 hover:text-orange-300 transition-colors"
+          className="flex items-center gap-2 text-black hover:text-gray-800 transition-colors font-semibold"
         >
-          <ArrowLeft size={24} />
-          <span className="font-semibold">Back</span>
+          <ArrowLeft className="w-5 h-5" />
+          Back
         </button>
+        <h1 className="flex-1 text-xl md:text-2xl font-bold text-white text-center mr-16">
+          Your Halloween Avatar
+        </h1>
       </header>
 
-      <div className="flex-1 flex flex-col items-center justify-center p-4">
-        <h2 className="text-3xl font-bold text-orange-500 mb-8 drop-shadow-lg">Your Spooky Avatar! 👻</h2>
-
+      <div className="flex-1 flex flex-col items-center justify-center p-4 gap-8">
         {/* Avatar Display */}
-        <div
-          ref={avatarRef}
-          className="bg-gray-900/50 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border-2 border-orange-500/30 max-w-md w-full mb-8"
-        >
-          <Avatar options={avatarOptions} />
+        <div ref={avatarRef} className="w-full max-w-md">
+          <AvatarDisplay placedAssets={placedAssets} />
         </div>
 
         {/* Action Buttons */}
@@ -98,42 +97,41 @@ export const SaveSharePage = ({ avatarOptions, onBack }: SaveSharePageProps) => 
           <button
             onClick={handleDownload}
             disabled={saving}
-            className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center gap-3"
+            className="flex-1  bg-orange-600 disabled:bg-orange-300 text-black font-bold py-4 px-6 rounded-lg transition-all flex items-center justify-center gap-3"
           >
             {saving ? (
               <>
-                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
+                <div className="animate-spin rounded-full h-5 w-5 border-2 border-black border-t-transparent" />
                 Saving...
               </>
             ) : (
               <>
-                <Download size={24} />
-                Save
+                <Download className="w-5 h-5" />
+                Save Image
               </>
             )}
           </button>
 
           <button
             onClick={handleShare}
-            className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center gap-3"
+            className="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-4 px-6 rounded-lg transition-all flex items-center justify-center gap-3"
           >
             {shared ? (
               <>
-                <Check size={24} />
+                <Check className="w-5 h-5" />
                 Shared!
               </>
             ) : (
               <>
-                <Share2 size={24} />
+                <Share2 className="w-5 h-5" />
                 Share
               </>
             )}
           </button>
         </div>
 
-        {/* Share info text */}
-        <p className="text-gray-400 text-sm mt-4 text-center max-w-md">
-          Click Save to download your avatar or Share to share it with friends! 🎃
+        <p className="text-gray-500 text-sm text-center max-w-md">
+          Download your avatar or share it with friends
         </p>
       </div>
     </div>
